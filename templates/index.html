@@ -1,0 +1,22 @@
+{% include "header.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index-style.css') }}">
+
+<div class="container">
+
+    <form action="{{ url_for('submit') }}" method="post">
+        <!-- Add file upload possibility (docx, pdf, google docs)-->
+        <textarea name="text" placeholder="Paste your essay here..." autofocus></textarea>
+        <!-- possibly trigger this onpaste? -->
+        <input type="submit" class="btn btn-submit">
+    </form>
+
+    <!--
+    word count
+    overall opinion: okay wow, nice, check
+    thesis box, search for key word repetition
+    -->
+
+</div>
+
+
+{% include "footer.html" %}

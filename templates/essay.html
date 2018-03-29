@@ -1,0 +1,17 @@
+{% include "header.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/essay-style.css') }}">
+
+
+<div class="container">
+    <div id="essayWrapper" oncopy="alertStudent()">
+        {{ essay|safe }}
+    </div>
+    <!-- Eventually, allow editing, then download as word/pdf-->
+</div>
+{% include "footer.html" %}
+
+
+
+<script>
+    // alert student that is NOT in times new roman size 12 double spaced, remind to do so
+</script>
