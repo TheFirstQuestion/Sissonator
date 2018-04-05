@@ -32,43 +32,48 @@ def submit():
     if len(pages) > 1:
         # Get rid of the first (title) page
         pages.pop(0)
+    # If there are multiple page breaks, we assume it's a bibliography
     essay = pages[0]
 
     finalProduct = ""
+
+
+    # Find quotes (includes pulling out words)
+    quoteRegex = r'(["“][^"”]*["”])'
+    quotes = re.findall(quoteRegex, essay)
+    # Highlight all quotes
+    for quote in quotes:
+        pos = essay.find(quote)
+        quoteLength = len(quote)
+        # Insert quote with highlight
+        #essay = essay[:pos] + "<span class='redBox'>" + quote + "</span>" + essay[pos+quoteLength:]
+
+    # Find citation and characters around it
+    anyCitationRegex = r'["“][^"”]*(.{4}[\)"”].*[\)"”].{4})'
+    correctCitationRegex = r'([^\.]["”]\s\(\D*\d+\)\.)'
+    citations = re.findall(anyCitationRegex, essay)
+    for citation in citations:
+        if re.search(correctCitationRegex, citation) is None:
+            essay = highlight(citation, essay, "red")
+        else:
+            essay = highlight(citation, essay, "green")
+
+
     # Split text up
     words = essay.split(" ")
     paragraphs = essay.split("\n")
 
-
-    # Find quotes (includes pulling out words)
-    quoteRegex = r'["“]([^"”]*)["”]'
-    quotes = re.findall(quoteRegex, essay)
-    for quote in quotes:
-        #print(quote)
-        print()
-
-    print()
-    print()
-    print()
-
-    # Find citation and characters around it
-    citationRegex = r'["“][^"”]*(.{4}["”][^\)"”]*\).{4})'
-    citations = re.findall(citationRegex, essay)
-    for citation in citations:
-        print(citation)
-        print()
-
-
-
-
-
-
-
     wordCount = len(words)
+    # Paragraphs[0] is \r, end of paragraphs are \r
+    thesis = paragraphs[1].split(".")[-2]
+
 
     for p in paragraphs:
-        finalProduct += (p + "<br>")
+        finalProduct += (p + "<br><br>")
 
+    #print(finalProduct)
+
+    # TODO: add info to database for analysis
 
     return viewEssay(finalProduct)
 
@@ -79,6 +84,12 @@ def createFile(text):
     myFile = open("essays/{}.txt".format(timestamp), "w")
     myFile.write(text)
     myFile.close()
+
+def highlight(s, essay, color):
+    pos = essay.find(s)
+    sLen = len(s)
+    essay = essay[:pos] + "<span class='" + color + "Box'>" + s + "</span>" + essay[pos+sLen:]
+    return essay
 
 
 if __name__ == "__main__":
